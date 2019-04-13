@@ -1,0 +1,19 @@
+Arvore Binária:
+
+Arvore AVL:
+
+Arvore RN:
+Arvore Binária:
+Altura: 31
+
+Arvore AVL:
+Total de rotações: 3575
+Altura: 14
+
+Arvore RN:
+Total de rotações: 2964
+Altura: 15
+
+------> 5000 números
+
+ ------------------------------------------------------------

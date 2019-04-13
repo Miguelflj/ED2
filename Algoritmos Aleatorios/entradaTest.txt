@@ -1,0 +1,20 @@
+c viageeemmm
+c viagemmmmm
+c viagemmmmmm
+p sp 10 12
+c
+c
+a 1 4 4
+a 1 2 2
+a 1 8 9
+a 2 3 8
+a 4 5 3
+a 3 7 5
+a 3 5 13
+a 5 6 11
+a 6 8 3
+a 8 10 1
+a 7 10 7
+a 7 9 2
+a 10 9 2
+

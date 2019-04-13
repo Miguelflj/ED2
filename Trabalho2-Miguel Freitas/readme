@@ -1,0 +1,8 @@
+Para utilizar o scrypt em Shell no bash:
+sh execut.sh nomedoarquivodeentrada.txt
+
+o saída será os valores de altura e rotações das três arvores com a quantidade de valores de entrada
+a saída é o arquivo >>> "teste.txt"
+
+
+Os testes já realizados com as médias calculadas estão no arquivo >>> "output.txt"

@@ -1,0 +1,114 @@
+Arvore Binária:
+Altura: 31
+
+Arvore AVL:
+Total de rotações: 3575
+Altura: 14
+
+Arvore RN:
+Total de rotações: 2964
+Altura: 15
+
+------> 5000 números
+
+ ------------------------------------------------------------
+Arvore Binária:
+Altura: 26
+
+Arvore AVL:
+Total de rotações: 3500
+Altura: 14
+
+Arvore RN:
+Total de rotações: 2960
+Altura: 15
+
+------> 5000 números
+
+ ------------------------------------------------------------
+Arvore Binária:
+Altura: 27
+
+Arvore AVL:
+Total de rotações: 3533
+Altura: 14
+
+Arvore RN:
+Total de rotações: 2895
+Altura: 15
+
+------> 5000 números
+
+ ------------------------------------------------------------
+Arvore Binária:
+Altura: 30
+
+Arvore AVL:
+Total de rotações: 13961
+Altura: 17
+
+Arvore RN:
+Total de rotações: 11067
+Altura: 18
+
+------> 20000 números
+
+ ------------------------------------------------------------
+Arvore Binária:
+Altura: 31
+
+Arvore AVL:
+Total de rotações: 13866
+Altura: 16
+
+Arvore RN:
+Total de rotações: 11168
+Altura: 20
+
+------> 20000 números
+
+ ------------------------------------------------------------
+Arvore Binária:
+Altura: 34
+
+Arvore AVL:
+Total de rotações: 13946
+Altura: 16
+
+Arvore RN:
+Total de rotações: 11096
+Altura: 19
+
+------> 20000 números
+
+ ------------------------------------------------------------
+
+
+Avaliação de eficiência :
+
+
+	Médias:
+	Árvore Binária: 
+		5000 dados
+			altura: (31 + 26 + 27)/3 = 28
+		20000 dados
+			altura: (30 + 31 + 34)/3 = 31,6
+
+	Árvore AVL:
+		5000 dados
+			altura:	(14 + 14 + 14)/3 = 14
+			rotações: (3575 + 3500 + 3533)/3 = 3536
+		20000 dados
+			altura:	(17 + 16 + 16)/3 = 16,3
+			rotações: (13961 + 13866 + 13946)/3 = 13924,3
+
+	Árvore RN 
+		5000 dados
+			altura: ( 15 + 15 + 15)/3 = 15
+			rotações: ( 2964 + 2960 + 2895)/3 = 2939,6
+		20000 dados
+			altura:	( 18 + 20 + 19)/3 = 19
+			rotações: ( 11067 + 11168 + 11096)/3 = 11110,3
+
+	
+	Com base nessas amostras podemos observar que as arvores balanceadas conseguem fazer uma grande diferença armazenando o valor diminuindo a altura da árvore, porém exigesse um processamento de rotação maior. A AVl tem um melhor balanceamento, no entanto, com significativa quantia de rotações superior a Rubro Negra.

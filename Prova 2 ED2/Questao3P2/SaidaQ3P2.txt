@@ -1,0 +1,6 @@
+
+vet[<indeceVertice>,<Cor>)
+vet[2,1)->vet[7,2)->vet[4,3)->vet[9,1)->vet[8,2)->vet[6,2)->vet[5,3)->vet[3,3)->vet[1,4)->NULL
+
+Numero Cromático: 4
+

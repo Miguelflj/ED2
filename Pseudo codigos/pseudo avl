@@ -1,0 +1,274 @@
+/**
+  * UFMT - CUA - Ciência da Computação
+  * Disciplina: ED2
+  * Professor: Ivairton M. Santos
+  * Autor: Ivairton
+  *
+  * Pseudo código das funções para inserção, remoção e manipulação da
+  * estrutura de dados Árvore AVL.
+  */
+
+
+/*** Definição de tipo ***/
+tipoAVL {
+	tipoAVL *esq;
+	tipoAVL *dir;
+	inteiro valor;
+	inteiro fb; //Fator de balanceamento
+};
+
+
+/*** Função principal de inserção em Árvore AVL ***/
+// O parâmetro 'T' corresponde à raiz da subárvore onde será inserido o novo dado.
+// O parâmetro 'dado' corresponde ao valor a ser inserido da AVL.
+inteiro insereAVL (tipoAVL **T, int dado) {
+	//Variável utilizada para sinalizar o sucesso do procedimento de inserção na AVL.
+	inteiro flagSucesso;
+	flagSucesso = falso;
+
+	//Verifica se a raiz informada como parâmetro é nula. Nesse caso será alocado um novo nó na memória.
+	se (*T == NULO) {
+		*T = aloca memória(tipoAVL));
+		se (*T != NULO) {
+			(*T).esq = NULO;
+			(*T).dir = NULO;
+			(*T).valor = dado;
+			(*T).fb = 0;
+			retorna 1/verdadeiro; 	//Ao inserir o novo nó, será retornado 1 (verdadeiro), de modo a modificar a variável 'flagSucesso' do procedimento pai (aquele que chamou o procedimento de maneira recursiva). Note que a execução desta função terminaria aqui.
+		} senao {
+			return 0/falso;
+		}
+	}
+
+	//Verifica se o dado a ser inserido é menor que o valor da raiz da sub-árvore atual. Nesse caso, será necessário descer à esquerda da árvore.
+	se ( (*T).valor > dado ) {
+		//Executa chamada recursiva com o filho à esquerda.
+		flagSucesso = insereAVL( (*T).esq, dado );
+
+		//Se ocorrer sucesso na inserção, verifica o balanceamento da árvore, executando uma rotação (a ser verificada) se necessário.
+		se (flagSucesso) {
+			caso ( (*T).fb ) {
+				= 1: //Caso dir > esq, então gera equilíbrio, add um elemento à esq.
+					(*T).fb = 0;
+					flagSucesso = 0/falso; //retorna 0
+				= 0: //Alturas iguais, então esq se torna maior que dir.
+					(*T).fb = -1;
+					//return 1;
+				= -1: //Será preciso executar uma rotação (a ser verificada).
+					verificaInsEsquerda( (*T) );
+					flagSucesso = 0; //retorna 0;
+			}
+		}
+	} //Se não é uma inserção à esq, então é à dir. Nesse caso será necessário descer à direita da árv.
+    senao se  ( (*T).valor < dado ) {
+		//Executa chamada recursiva com o filho à direita
+		flagSucesso = insereAVL( (*T).dir, dado );
+		//Se ocorrer sucesso na inserção, verifica o balanceamento da árvore, executando uma rotação (a ser verificada) se necessário.
+		se (flagSucesso) {
+			caso ( (*T).fb ) {
+				= -1: //Caso dir < esq, então gera equilíbrio, add um elemento à dir.
+					(*T).fb = 0;
+					flagSucesso = 0;
+				= 0: //Alturas iguais, então dir se torna maior que esq'.
+					(*T).fb = 1;
+				= 1: //Será preciso executar uma rotação (a ser verificada).
+					verificaInsDireita( (*T) );
+					flagSucesso = 0/falso;
+			}
+		}
+	} senao { //Caso o valor a ser inserido já esteja presente na AVL (não faz nada).
+		flagSucesso = 0/falso;
+	}
+	return flagSucesso;
+}
+
+
+/***Função que verifica a rotação a ser feita em uma inserção à esquerda. ***/
+void verificaInsEsquerda( tipoAVL **T ) {
+	//Considerando que o novo nó foi inserido à esq e causou desbalanceamento = -2
+	tipoAVL *u;
+	u = (*T).esq;
+
+	se ( u.fb == -1) {	//Verifica o sinal do filho (se igual, então rotação simples.
+		rotacaoDireita( (*T) );
+	} senao { //Caso contrário, rotação dupla.
+		rotacaoEsqDir( (*T) );
+	}
+
+	//Atualiza o balanceamento da nova raiz (esse procedimento pode ser feito diretamente nas funções de rotação).
+	(*T).fb = 0;
+}
+
+
+/*** Função que verifica a rotação a ser feita em uma inserção à direita. ***/
+void verificaInsDireita( tipoAVL **T ) {
+	//Considerando que o novo nó foi inserido à dir e causou desbalanceamento = -2
+	tipoAVL *u;
+	u = (*T).dir;
+
+	se ( u.fb == 1) { //Verifica o sinal do filho (se igual, então rotação simples.
+		rotacaoEsquerda( (*T) );
+	} senao { //Caso contrário, rotação dupla.
+		rotacaoDirEsq( (*T) );
+	}
+
+	//Atualiza o balanceamento da nova raiz (esse procedimento pode ser feito diretamente nas funções de rotação).
+	(*T).fb = 0;
+}
+
+
+/*** Função de rotação simples à direita ***/
+void rotacaoDireita( tipoAVL **T ) {
+	tipoAVL *u;
+	u = (*T).esq;
+
+	(*T).esq = u.dir;
+	u.dir = *T;
+
+	(*T).fb = 0;
+	u.fb = 0;
+	(*T) = u;
+	//Poderia atualizar o FB do novo *T.
+	//(*T)->fb = 0;
+}
+
+
+/*** Função de rotação dupla: esquerda e direita ***/
+void rotacaoEsqDir( tipoAVL **T ) {
+	tipoAVL *u, *v;
+	u = (*T).esq;
+	v= u.dir; 	//Ou, se preferir, (*T)->esq->dir
+	u.dir = v.esq;
+	v.esq = u;
+	(*T).esq = v.dir;
+	v.dir = *T;
+
+	//Verifica os valore do FB do nó 'v', para correta atualização do valor do balanço da raiz (velha) e do antigo filho esquerdo ('u')
+	se ( v.fb == -1 ) {
+		(*T).fb = 1;
+		u.fb = 0;
+	} senao se ( v.fb == 0 ) {
+		(*T).fb = 0;
+		u.fb = 0;
+	} senao se ( v.fb == 1 ) {
+		(*T).fb = 0;
+		u.fb = -1;
+	}
+
+	*T = v;
+	//Se preferir, atualize o valor da nova raiz para zero.
+}
+
+
+/*** Função de rotação simples à esquerda ***/
+void rotacaoEsquerda( tipoAVL **T ) {
+	tipoAVL *u;
+	u = (*T).dir;
+
+	(*T).dir = u.esq;
+	u.esq = *T;
+
+	(*T).fb = 0;
+	(*T) = u;
+	//Poderia atualizar o FB do novo *T.
+}
+
+
+/*** Função de rotação dupla: direita e esquerda ***/
+void rotacaoDirEsq( tipoAVL **T ) {
+	tipoAVL *u, *v;
+	u = (*T).dir;
+	v= u.esq; 	//Ou, se preferir, (*T)->dir->esq
+	u.esq = v.dir;
+	v.dir = u;
+	(*T).dir = v.esq;
+	v.esq = *T;
+
+	//Verifica os valore do FB do nó 'v', para correta atualização do valor do balanço da raiz (velha) e do antigo filho esquerdo ('u')
+	se ( v.fb == -1 ) {
+		(*T).fb = 0;
+		u.fb = 1;
+	} senao se ( v.fb == 0 ) {
+		(*T).fb = 0;
+		u.fb = 0;
+	} senao se ( v.fb == 1 ) {
+		(*T).fb = -1;
+		u.fb = 0;
+	}
+
+	*T = v;
+	//Se preferir, atualize o valor da nova raiz para zero.
+}
+
+
+/*** Funcao principal de remoção em AVL ***/
+void removeAVL(tipoAVL **T, int valor) {
+	// Chama funcao secundária para remoçao
+	inteiro flag;
+	remAVL (T, valor, &flag);
+}
+
+ /*** Função de remoção em árvore AVL ***/
+ void remAVL (tipoAVL **T, inteiro chave, inteiro *flagMudanca) {
+	se (*T == NULO) {
+		//Nó da árvore está nulo, então a chave não foi encontrada
+		*flagMudanca = 0;
+	} senao {	//Busca pela chave na árvore
+		se ( (*T).valor > chave) {		//Busca pela chave na sub-árvore filho esq.
+			//Executa chamada recursiva da função, atualizando o filho esquerdo com o retorno da função (no caso de uma remoção o filho será alterado, caso contrário, permanecerá como está).
+			remAVL((*T).esq, chave, flagMudanca);
+			se (*flagMudanca == 1) {
+				//verificaInsDireita( &T );
+			}
+		} senao se ((*T).valor < chave) {	//Busca pela chave na sub-arvore filho dir.
+			//Executa chamada recursiva da função (...)
+			remAVL((*T).dir, chave, flagMudanca);
+			se (*flagMudanca == 1) {
+				//verificaInsEsquerda( &T );
+			}
+		} senao {	//O valor chave buscado foi encontrado
+			//Se o nó é uma folha:
+			se ( ((*T).esq == NULO) E ((*T).dir == NULO) ) {
+				desaloca(*T);
+				flagMudanca = 1;
+				(*T) = NULO;
+			} senao se ( ((*T).dir == NULO) E ((*T).esq != NULO) ) {	//Se apenas o filho direito é nulo, então basta "subir" com o filho esquerdo.
+				tipoAVL *aux;
+				aux = *T;
+				(*T) = (*T).esq;
+				desaloca(aux);	//Desaloca o nó encontrado da memória.
+				*flagMudanca = 1;
+			} senao se ( ((*T).esq == NULO) E ((*T).dir != NULO) ) {	//Se apenas o filho esquerdo é nulo, então basta "subir" com o filho direito.
+				tipoAVL *aux;
+				aux = (*T);
+				(*T) = (*T).dir;
+				desaloca(aux);	//Desaloca o nó encontrado da memória.
+				*flagMudanca = 1;
+			} senao {	//O nó possui os dois filhos, então busca pelo elemento mais à direita do nó esquerdo.
+				(*T).valor = buscaRemove((*T).esq);
+				//Deverá ser verificado se há a necessidade de executar uma rotação, pois estamos descendo à esquerda da árvore.
+				se (*flagMudanca) {
+				//	verificaInsDireita( &(T) );
+				}
+			}
+		}
+	}
+ }
+
+// FUnçao que busca pelo maior elemento de um ramo esquerdo
+inteiro buscaRemove(tipoAVL **T) {
+	se ( ((*T).esq == NULO) E ((*T).dir == NULO) ) {
+		inteiro i;
+		i = (*T).valor;
+		desaloca((*T));
+		(*T) = NULO;
+		retorna i;
+	} senao se ( ((*T).esq != NULO) E ((*T).dir == NULO) ) {
+		inteiro i;
+		i = (*T).valor;
+		(*T) = (*T).esq;
+		retorna i;
+	} senao {
+		retorna buscaRemove((*T).dir);
+	}
+}

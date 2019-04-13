@@ -1,0 +1,107 @@
+Pseudo código da inserção na Rubro-Negra
+
+tipoRN {
+    int valor
+    tipoRN *esq, *dir
+    int cor }
+
+Funcao tipoRN *insereRN (tipoRN *arv, in valor) {
+    tipoRN *raiz
+    raiz = arv
+    insere_em_RN(arv, valor, NULO, NULO, &raiz) // Parametros: arv, valor, pai, avo, raiz
+    raiz.cor = PRETO
+    retorna raiz
+}
+
+Funçao int insere_em_RN(no, valor, *pai, *avo, **raiz) {
+    tipoRN *aux
+    int flagSucesso
+    se (no == NULO) entao
+        aloca memoria para no, inicializa seus valores e cor com vermelho
+        se (raiz == NULO) entao //Verifica o caso especial da raiz ser nula
+            raiz = no
+        senao    //Atualiza o ponteiro do no pai, para apontar para o novo nó
+            se (valor < pai.valor) entao
+                pai.esq = no
+            senao
+                pai.dir = no
+            fim se
+            retorna 1 //verdadeiro, sucesso na insercao
+        fim se
+    senao //caso o no nao seja nulo
+        se (valor != no.valor) entao
+            se (valor < no.valor) entao
+                aux = no.esq  //no em que iremos descer
+            senao
+                aux = no.dir  //no em que iremos descer
+            fim se
+            flagSucesso = insere_em_RN(aux, valor, no, pai, &raiz) //Chamada recursiva
+            caso flagSucesso seja:
+                (0): retorna 1 //Caso nao ocorreu insercao, apenas propaga o "1"
+                (1): //Se a insercao ocorreu com sucesso, verifica o balanceamento
+                    retorna balanceamento (aux, no, pai, avo, raiz)
+                (2): //O retorno "2" significa que ocorreu uma rotacao e os ponteiros precisam ser estruturados
+                    retorna 2
+            fim caso
+        senao
+            //caso o valor seja igual, apenas retorna zero
+            retorna 0
+        fim se
+    fim se
+}
+
+Funcao int balanceamento (no, pai, avo, bisavo, raiz) {
+    tipoRN *tio, *raizSubArv
+    int flagBalanco //será usada para marcar o tipo de balanco:1=atualizacao de cores, 2=rotacao
+    //Quando ocorre atualizacao de cores, a verificacao deve continuar nos níveis superiores. Quando ocorre uma rotacao, nao ha necessidade. Por isso a inicializacao em 2 (comodidade)
+    flagBalanco = 2
+    se (pai != NULO) entao
+        se (pai.cor == VERMELHO) entao
+            //Verifica o tio
+            se (pai == avo.esq) entao
+                tio = avo.dir
+            senao
+                tio = avo.esq
+            fim se
+            //Verifica se o tio é preto
+            se (tio == NULO ou tio.cor == PRETO) entao
+                //Eh preciso executar uma rotacao
+                se (pai == avo.esq) entao
+                    se (no == pai.esq) entao
+                        //se o pai é filho esq e o no tb é filho esq, entao rotacao simples à direita
+                        rotacao_simples_direita() //atualiza raizSubArv
+                    senao
+                        //se o pai é filho esq, mas o no é filho direito, entao rotacao dupla esq-dir
+                        rotacao_dupla_esq_dir() //atualiza raizSubArv
+                    fim se
+                senao
+                    se (no == pai.dir) entao
+                        //se o pai é filho dir e o no tb, entao rotacao simples à esq
+                        rotacao_simples_esq() //atualiza raizSubArv
+                    senao
+                        //se o pai é filho dir e o no é filho dir, entao rotacao dupla dir-esq
+                        rotacao_dupla_dir_esq() //atualiza raizSubArv
+                    fim se
+                fim se
+                se (bisavo != NULO) entao
+                    se (no.valor < bisavo.valor) entao
+                        bisavo.esq = raizSubArv
+                    senao
+                        bisavo.dir = raizSubArv
+                    fim se
+                senao
+                    raiz = raizSubArv
+                fim se
+            senao
+                //Se o tio é VERMELHO, entao basta atualizar as cores
+                pai.cor = PRETO
+                tio.cor = PRETO
+                avo.cor = VERMELHO
+                flabBalanco = 1
+            fim se
+        fim se
+        retorna flagBalanco
+    senao
+        retorna 2 //Caso o pai seja nulo, nao há nada a fazer, estamos em um no filho da raiz
+    fim se
+}
